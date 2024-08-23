@@ -2,13 +2,13 @@ package com.carbon.carbonweather.ui
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
@@ -16,6 +16,7 @@ import com.carbon.carbonweather.databinding.FragmentWeatherBinding
 import com.carbon.carbonweather.utils.CustomProgressDialog
 import com.carbon.carbonweather.utils.convertLongToTime
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class WeatherFragment : Fragment() {
@@ -27,7 +28,6 @@ class WeatherFragment : Fragment() {
     private val viewModel: WeatherViewModel by viewModels()
     private val weatherAdapter: WeatherAdapter by lazy { WeatherAdapter() }
     private var query = ""
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -103,7 +103,8 @@ class WeatherFragment : Fragment() {
     private fun observeForecasts() {
         viewModel.weatherForecasts.observe(requireActivity()) { result ->
             result?.getContentIfNotHandled()?.let { value ->
-                binding.noData.visibility = GONE
+                if (value.isNotEmpty())
+                    binding.noData.visibility = GONE
                 weatherAdapter.submitList(value)
             }
         }
